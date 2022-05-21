@@ -6,7 +6,7 @@ dataSources:
     name: SocotraFactory
     network: rinkeby
     source:
-      address: ""
+      address: "0xe51b2c07f3096a5c726a3fe1ea0b35e9a7930943"
       abi: SocotraFactory
     mapping:
       kind: ethereum/events
@@ -26,7 +26,7 @@ dataSources:
     name: SocotraBranchManager
     network: rinkeby
     source:
-      address: ""
+      address: "0x5c8b4e60c9ed75441f48e18586d3a8043921b05c"
       abi: SocotraBranchManager
     mapping:
       kind: ethereum/events
@@ -42,4 +42,16 @@ dataSources:
           handler: handleProxyRegistered
         - event: UpdateSnapshot(address)
           handler: handleUpdateSnapshot
+        - event: DelegateSpace(bytes32)
+          handler: handleDelegateSpace
+        - event: RegisterMember(address,uint256,uint256)
+          handler: handleRegisterMember
+        - event: ClaimToken(address,uint256)
+          handler: handleClaimToken
+        - event: RequestPayout(uint256,uint256,address,address,bytes)
+          handler: handleRequestPayout
+        - event: WithdrawPayout(uint256)
+          handler: handleWithdrawPayout
+        - event: IssuePayout(uint256)
+          handler: handleIssuePayout
       file: ./src/manager.ts
