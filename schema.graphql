@@ -1,6 +1,7 @@
-type ExampleEntity @entity {
+type Branch @entity {
   id: ID!
   count: BigInt!
   branchAddr: Bytes! # address
   parentToken: Bytes! # address
+  voteToken: Bytes! # address
 }
