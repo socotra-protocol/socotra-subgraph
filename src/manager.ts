@@ -16,6 +16,12 @@ export function handleProxyRegistered(event: ProxyRegistered): void {}
 export function handleUpdateSnapshot(event: UpdateSnapshot): void {}
 export function handleDelegateSpace(event: DelegateSpace): void {}
 export function handleRegisterMember(event: RegisterMember): void {
+  // get branch
+  let branch = Branch.load(event.address);
+  if (branch) {
+    branch.voteAmount = branch.voteAmount.plus(event.params.voteAmount);
+  }
+
   // get member
   let member = Member.load(event.params.memberAddr);
 
@@ -150,6 +156,6 @@ export function calPayoutAmount(
   claimAmount: BigInt,
   totalMemberToken: BigInt,
   totalMemberReward: BigInt
-) {
+): BigInt {
   return claimAmount.times(totalMemberReward).div(totalMemberToken);
 }

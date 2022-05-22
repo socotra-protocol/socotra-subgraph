@@ -1,0 +1,66 @@
+specVersion: 0.0.2
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SocotraFactory
+    network: rinkeby
+    source:
+      address: "0xd7bb1B130973F9f089dfDC464e7ca764023E092e"
+      abi: SocotraFactory
+      startBlock: 10719850
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - SplitBranch
+      abis:
+        - name: SocotraFactory
+          file: SocotraFactory/abis/SocotraFactory.json
+        - name: SocotraBranchManager
+          file: SocotraFactory/abis/SocotraBranchManager.json
+      eventHandlers:
+        - event: SplitBranch(address,address,uint256,address,uint256)
+          handler: handleSplitBranch
+      file: SocotraFactory/SocotraFactory.wasm
+templates:
+  - kind: ethereum
+    name: SocotraBranchManager
+    network: rinkeby
+    source:
+      abi: SocotraBranchManager
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ProxyRegistered
+        - UpdateSnapshot
+        - DelegateSpace
+        - RegisterMember
+        - ClaimToken
+        - RequestPayout
+        - WithdrawPayout
+        - IssuePayout
+      abis:
+        - name: SocotraBranchManager
+          file: SocotraBranchManager/abis/SocotraBranchManager.json
+      eventHandlers:
+        - event: ProxyRegistered(address)
+          handler: handleProxyRegistered
+        - event: UpdateSnapshot(address)
+          handler: handleUpdateSnapshot
+        - event: DelegateSpace(bytes32)
+          handler: handleDelegateSpace
+        - event: RegisterMember(address,uint256,uint256)
+          handler: handleRegisterMember
+        - event: ClaimToken(address,uint256)
+          handler: handleClaimToken
+        - event: RequestPayout(uint256,uint256,address,address,string)
+          handler: handleRequestPayout
+        - event: WithdrawPayout(uint256)
+          handler: handleWithdrawPayout
+        - event: IssuePayout(uint256)
+          handler: handleIssuePayout
+      file: templates/SocotraBranchManager/SocotraBranchManager.wasm
