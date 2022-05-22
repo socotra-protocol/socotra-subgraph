@@ -9,7 +9,7 @@ import {
   RequestPayout,
   WithdrawPayout,
   IssuePayout,
-} from "../generated/SocotraBranchManager/SocotraBranchManager";
+} from "../generated/templates/SocotraBranchManager";
 import { Branch, Member, MemberBranch, Payout } from "../generated/schema";
 
 export function handleProxyRegistered(event: ProxyRegistered): void {}

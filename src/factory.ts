@@ -3,7 +3,7 @@ import {
   SocotraFactory,
   SplitBranch,
 } from "../generated/SocotraFactory/SocotraFactory";
-import { SocotraBranchManager } from "../generated/SocotraBranchManager/SocotraBranchManager";
+import { SocotraBranchManager } from "../generated/templates/SocotraBranchManager/SocotraBranchManager";
 import { SocotraBranchManager as BranchManagerTemplate } from "../generated/templates";
 import { Branch } from "../generated/schema";
 
