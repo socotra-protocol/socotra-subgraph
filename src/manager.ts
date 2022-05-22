@@ -72,10 +72,84 @@ export function handleRequestPayout(event: RequestPayout): void {
     );
     memberBranch.save();
 
-    let payout = Payout.load(
-      memberBranch.id.toHexString() + event.params.id.toString()
+    // let payout = Payout.load(
+    //   memberBranch.id.toHexString() + event.params.id.toString()
+    // );
+
+    let payout = new Payout(
+      memberBranch.branch.toHexString() + event.params.id.toString()
     );
+    payout.issuer = event.params.issuer;
+    payout.branch = event.address;
+    payout.payoutId = event.params.id;
+    payout.amount = event.params.amount;
+    payout.receiver = event.params.receiver;
+    payout.proof = event.params.proof;
+    payout.isPaid = false;
+    payout.save();
   }
 }
-export function handleWithdrawPayout(event: WithdrawPayout): void {}
-export function handleIssuePayout(event: IssuePayout): void {}
+export function handleWithdrawPayout(event: WithdrawPayout): void {
+  let payout = Payout.load(
+    event.address.toHexString() + event.params.id.toString()
+  );
+
+  if (payout) {
+    payout.isPaid = true;
+
+    let memberBranch = MemberBranch.load(payout.issuer.concat(event.address));
+
+    if (memberBranch) {
+      // update claiming tokens
+      memberBranch.claimingTokens = memberBranch.claimingTokens.minus(
+        payout.amount
+      );
+      memberBranch.save();
+    }
+    payout.save();
+  }
+}
+export function handleIssuePayout(event: IssuePayout): void {
+  let payout = Payout.load(
+    event.address.toHexString() + event.params.id.toString()
+  );
+
+  if (payout) {
+    payout.isPaid = true;
+
+    let memberBranch = MemberBranch.load(payout.issuer.concat(event.address));
+
+    if (memberBranch) {
+      // update tokens
+      const payoutAmount = calPayoutAmount(
+        payout.amount,
+        memberBranch.totalTokens,
+        memberBranch.rewardAmount
+      );
+      memberBranch.claimingTokens = memberBranch.rewardAmount.minus(
+        payoutAmount
+      );
+      memberBranch.claimingTokens = memberBranch.claimingTokens.minus(
+        payout.amount
+      );
+      memberBranch.totalTokens = memberBranch.totalTokens.minus(payout.amount);
+
+      memberBranch.save();
+
+      // load branch
+      let branch = Branch.load(memberBranch.branch);
+      if (branch) {
+        branch.parentAmount = branch.parentAmount.minus(payoutAmount);
+      }
+    }
+    payout.save();
+  }
+}
+
+export function calPayoutAmount(
+  claimAmount: BigInt,
+  totalMemberToken: BigInt,
+  totalMemberReward: BigInt
+) {
+  return claimAmount.times(totalMemberReward).div(totalMemberToken);
+}

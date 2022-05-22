@@ -12,15 +12,18 @@ export function handleSplitBranch(event: SplitBranch): void {
 
   if (!branch) {
     branch = new Branch(event.params.branchAddr);
-    branch.count = BigInt.fromI32(0);
     branch.branchAddr = event.params.branchAddr;
     branch.parentToken = event.params.parentToken;
-
+    branch.parentAmount = event.params.amount;
+    branch.owner = event.transaction.from;
     let managerContract = SocotraBranchManager.bind(event.params.branchAddr);
     const branchInfo = managerContract.branchInfo();
     const voteToken = branchInfo.value1;
+    const branchName = branchInfo.value2;
+    const imageUrl = branchInfo.value3;
     branch.voteToken = voteToken;
-
+    branch.name = branchName;
+    branch.imageUrl = imageUrl;
     BranchManagerTemplate.create(event.params.branchAddr);
   }
 

@@ -1,9 +1,12 @@
 type Branch @entity {
   id: Bytes!
-  count: BigInt!
+  name: String!
+  owner: Bytes!
+  imageUrl: String!
   branchAddr: Bytes! # address
   parentToken: Bytes! # address
   voteToken: Bytes! # address
+  parentAmount: BigInt!
   proxyRegistered: Boolean
   snapshotVoteProxy: Bytes
   snapshotDelegation: Bytes
@@ -15,7 +18,7 @@ type Branch @entity {
 type Member @entity {
   id: Bytes!
   branches: [MemberBranch!] @derivedFrom(field: "member")
-  payouts: [Payout!] @derivedFrom(field: "member")
+  payouts: [Payout!] @derivedFrom(field: "issuer")
 }
 
 type MemberBranch @entity {
@@ -29,12 +32,12 @@ type MemberBranch @entity {
 }
 
 type Payout @entity {
-  id: ID! # Set to `memberBranch.id.concat(payout.id)`
-  member: Member!
+  id: ID! # Set to `memberBranch.branch + payout.id`
+  issuer: Member!
   branch: Branch!
   payoutId: BigInt!
   amount: BigInt!
-  issuer: Bytes!
   receiver: Bytes!
   proof: String!
+  isPaid: Boolean!
 }
