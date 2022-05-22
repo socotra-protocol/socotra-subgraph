@@ -137,9 +137,7 @@ export function handleIssuePayout(event: IssuePayout): void {
         memberBranch.totalTokens,
         memberBranch.rewardAmount
       );
-      memberBranch.claimingTokens = memberBranch.rewardAmount.minus(
-        payoutAmount
-      );
+      memberBranch.rewardAmount = memberBranch.rewardAmount.minus(payoutAmount);
       memberBranch.claimingTokens = memberBranch.claimingTokens.minus(
         payout.amount
       );
