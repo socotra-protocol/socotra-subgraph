@@ -4,22 +4,25 @@ import {
   SplitBranch,
 } from "../generated/SocotraFactory/SocotraFactory";
 import { SocotraBranchManager } from "../generated/SocotraBranchManager/SocotraBranchManager";
+import { SocotraBranchManager as BranchManagerTemplate } from "../generated/templates";
 import { Branch } from "../generated/schema";
 
 export function handleSplitBranch(event: SplitBranch): void {
-  let entity = Branch.load(event.transaction.from.toHex());
+  let branch = Branch.load(event.params.branchAddr);
 
-  if (!entity) {
-    entity = new Branch(event.params.branchId.toString());
-    entity.count = BigInt.fromI32(0);
-    entity.branchAddr = event.params.branchAddr;
-    entity.parentToken = event.params.parentToken;
+  if (!branch) {
+    branch = new Branch(event.params.branchAddr);
+    branch.count = BigInt.fromI32(0);
+    branch.branchAddr = event.params.branchAddr;
+    branch.parentToken = event.params.parentToken;
 
     let managerContract = SocotraBranchManager.bind(event.params.branchAddr);
     const branchInfo = managerContract.branchInfo();
     const voteToken = branchInfo.value1;
-    entity.voteToken = voteToken;
+    branch.voteToken = voteToken;
+
+    BranchManagerTemplate.create(event.params.branchAddr);
   }
 
-  entity.save();
+  branch.save();
 }

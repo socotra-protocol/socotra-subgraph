@@ -1,6 +1,6 @@
 specVersion: 0.0.2
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: SocotraFactory
@@ -17,11 +17,11 @@ dataSources:
         - SplitBranch
       abis:
         - name: SocotraFactory
-          file: ./abis/SocotraFactory.json
+          file: SocotraFactory/abis/SocotraFactory.json
       eventHandlers:
         - event: SplitBranch(address,address,uint256,address,uint256)
           handler: handleSplitBranch
-      file: ./src/factory.ts
+      file: SocotraFactory/SocotraFactory.wasm
 templates:
   - kind: ethereum
     name: SocotraBranchManager
@@ -43,7 +43,7 @@ templates:
         - IssuePayout
       abis:
         - name: SocotraBranchManager
-          file: ./abis/SocotraBranchManager.json
+          file: SocotraBranchManager/abis/SocotraBranchManager.json
       eventHandlers:
         - event: ProxyRegistered(address)
           handler: handleProxyRegistered
@@ -61,4 +61,4 @@ templates:
           handler: handleWithdrawPayout
         - event: IssuePayout(uint256)
           handler: handleIssuePayout
-      file: ./src/manager.ts
+      file: templates/SocotraBranchManager/SocotraBranchManager.wasm
