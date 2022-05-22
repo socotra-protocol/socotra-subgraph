@@ -6,7 +6,7 @@ dataSources:
     name: SocotraFactory
     network: rinkeby
     source:
-      address: "0xd7bb1B130973F9f089dfDC464e7ca764023E092e"
+      address: "0x1B65b5411f6E06a7cc46d1523BABf2E7153D94d3"
       abi: SocotraFactory
       startBlock: 10719850
     mapping:

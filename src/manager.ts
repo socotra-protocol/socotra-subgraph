@@ -12,7 +12,12 @@ import {
 } from "../generated/templates/SocotraBranchManager/SocotraBranchManager";
 import { Branch, Member, MemberBranch, Payout } from "../generated/schema";
 
-export function handleProxyRegistered(event: ProxyRegistered): void {}
+export function handleProxyRegistered(event: ProxyRegistered): void {
+  let branch = Branch.load(event.address);
+  if (branch) {
+    branch.snapshotVoteProxy = event.params.proxy;
+  }
+}
 export function handleUpdateSnapshot(event: UpdateSnapshot): void {}
 export function handleDelegateSpace(event: DelegateSpace): void {}
 export function handleRegisterMember(event: RegisterMember): void {
